@@ -5,7 +5,7 @@ public class Asst2
 {
     static final int MIN = 0;
     static final int MAX = 2;
-    static final int n0 = 1024;
+    static final int n0 = 10240;
     public static void main(String[] args) throws IOException
     {
         int n = Integer.parseInt(args[1]);
@@ -34,13 +34,20 @@ public class Asst2
         // matrix to output
         int[][] c = new int[n][n];
         c = multiply(a,b);
+        /*
+        Using a stringbuilder and a single call to println speeds 
+        up the program's execution tremendously because file io is 
+        slow. 
+        */
+        StringBuilder output = new StringBuilder();
         for (int i = 0; i < n; i++)
         {
             for (int j = 0; j < n; j++)
             {
-                System.out.println(c[i][j]);
+                output.append(c[i][j]).append("\n");
             }
         }
+        System.out.println(output.toString());
         //randtests(n);
         
     }
