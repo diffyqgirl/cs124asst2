@@ -1,0 +1,28 @@
+\documentclass{article}
+\begin{document}
+\title{CS 124 Programming Assignment 2}
+\author{30943147}
+\maketitle
+\section{Caching}
+When multiplying two matrices $A*B=C$ using the naive matrix multiplication method, the elements of C are given as follows
+$$C[i][j] = \sum\limits_k A[i][k]*B[k][j]$$
+This is naturally implemented with 3 nested for loops iterating over $i$, $j$, and $k$. There are $3!=6$ possible permutations of their order. I tested all of them experimentally to determine which was best. Runtime measurements were taken by running the naive algorithm on $n \times n$ matrices with randomly generated entries for $n=1200$. 
+\begin{center}
+\begin{tabular}{ |c|c| } 
+ \hline
+ ordering & runtime\\ 
+\hline
+ i, j, k &  5.81s \\ 
+\hline
+ i, k, j & 1.73s \\ 
+\hline
+j, i, k & \\
+\hline
+j, k, i & \\
+\hline
+k, i, j & \\
+k, j, i & \\
+ \hline
+\end{tabular}
+\end{center}
+\end{document}
