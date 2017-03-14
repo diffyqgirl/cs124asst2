@@ -5,7 +5,8 @@ JC = javac
 	$(JC) $(JFLAGS) $*.java
 
 CLASSES = \
-	Asst2.java 
+	Asst2.java \
+	MakeInfile.java
 
 default: classes
 

@@ -1,13 +1,40 @@
 import java.util.Arrays;
+import java.io.*;
+
 public class Asst2
 {
     static final int MIN = 0;
     static final int MAX = 2;
     static final int n0 = 1024;
-    public static void main(String[] args)
+    public static void main(String[] args) throws IOException
     {
         int n = Integer.parseInt(args[1]);
+        File infile = new File(args[2]);
+        FileReader fr = new FileReader(infile);
+        BufferedReader br = new BufferedReader(fr);
+        // input matrices
+        int[][] a = new int[n][n];
+        int[][] b = new int[n][n];
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                a[i][j] = Integer.parseInt(br.readLine());
+            }
+        }
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                b[i][j] = Integer.parseInt(br.readLine());
+            }
+        }
+
+        // matrix to output
+        int[][] c = new int[n][n];
         randtests(n);
+        br.close();
+        fr.close();
     }
 
     public static void randtests(int n)
