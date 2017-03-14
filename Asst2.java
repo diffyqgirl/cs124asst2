@@ -42,10 +42,7 @@ public class Asst2
         StringBuilder output = new StringBuilder();
         for (int i = 0; i < n; i++)
         {
-            for (int j = 0; j < n; j++)
-            {
-                output.append(c[i][j]).append("\n");
-            }
+            output.append(c[i][i]).append("\n");
         }
         System.out.println(output.toString());
         //randtests(n);
