@@ -16,13 +16,14 @@ This is naturally implemented with 3 nested for loops iterating over $i$, $j$, a
 \hline
  i, k, j & 1.73s \\ 
 \hline
-j, i, k & \\
+j, i, k & 5.54s \\
 \hline
-j, k, i & \\
+j, k, i & 25.30s\\
 \hline
-k, i, j & \\
-k, j, i & \\
+k, i, j & 2.05s \\
+k, j, i & 24.67s\\
  \hline
 \end{tabular}
 \end{center}
+The ordering i, k, j produces the best results. The caching behaviour of that ordering can be further optimized by saving the intermediate value of each $A[i][k]$ before we iterate over $j$. This allows the innermost loop, with iterates over $j$, to only access a single row of matrix $B$, in order, via calls to access $B[k][j]$. Since the matrices are stored in row-major order, this is very cache friendly. Saving the intermediate value of $A[i][k]$ prevents the cache from thrashing as it must repeatedly load up $A[i]$ to recalculate $A[i][k]$, which is wasted work since $A[i][k]$ isn't changing during the innermost loop over $j$. 
 \end{document}

@@ -31,10 +31,11 @@ public class Asst2
         for (int i = 0; i < a.length; i++)
         {
             for (int k = 0; k < a.length; k++)
-            {
+            { 
+                int A = a[i][k];
                 for (int j = 0; j < a.length; j++)
                 {
-                    c[i][j] += a[i][k]*b[k][j];
+                    c[i][j] += A*b[k][j];
                 }
             }
         }
