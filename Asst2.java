@@ -3,6 +3,7 @@ public class Asst2
 {
     static final int MIN = 0;
     static final int MAX = 2;
+    static final int n0 = 1024;
     public static void main(String[] args)
     {
         int n = Integer.parseInt(args[1]);
@@ -87,12 +88,137 @@ public class Asst2
             }
         }
 
-        //
+        // M2 = (A21 + A22)(B11)
+        for (int i = 0; i < n/2; i++)
+        {
+            for (int j = 0; j < n/2; j++)
+            {
+                a_temp[i][j] = a[i + n/2][j] + a[i + n/2][j + n/2];
+                b_temp[i][j] = b[i][j];
+            }
+        }
+        m_temp = multiply(a_temp, b_temp);
+
+        // M2 should be added to C21 and subtracted from C22
+        for (int i = 0; i < n/2; i++)
+        {
+            for (int j = 0; j < n/2; j++)
+            {
+                c[i + n/2][j] += m_temp[i][j];
+                c[i + n/2][j + n/2] -= m_temp[i][j];
+            }
+        }
+
+        // M3 = A11 * (B12-B22)
+        for (int i = 0; i < n/2; i++)
+        {
+            for (int j = 0; j < n/2; j++)
+            {
+                a_temp[i][j] = a[i][j];
+                b_temp[i][j] = b[i][j + n/2] - b[i + n/2][j + n/2];
+            }
+        }
+        m_temp = multiply(a_temp, b_temp);
+
+        // M3 should be added to c12 and c22
+        for (int i = 0; i < n/2; i++)
+        {
+            for (int j = 0; j < n/2; j++)
+            {
+                c[i][j + n/2] += m_temp[i][j];
+                c[i + n/2][j + n/2] += m_temp[i][j];
+            }
+        }
+
+        // M4 = A22*(B21-B11)
+        for (int i = 0; i < n/2; i++)
+        {
+            for (int j = 0; j < n/2; j++)
+            {
+                a_temp[i][j] = a[i + n/2][j + n/2];
+                b_temp[i][j] = b[i + n/2][j] - b[i][j];
+            }
+        }
+        m_temp = multiply(a_temp, b_temp);
+
+        // M4 should be added to c11 and c21
+        for (int i = 0; i < n/2; i++)
+        {
+            for (int j = 0; j < n/2; j++)
+            {
+                c[i][j] += m_temp[i][j];
+                c[i + n/2][j] += m_temp[i][j];
+            }
+        }
+
+        // M5 = (A11 + A12)*B22
+        for (int i = 0; i < n/2; i++)
+        {
+            for (int j = 0; j < n/2; j++)
+            {
+                a_temp[i][j] = a[i][j] + a[i][j + n/2];
+                b_temp[i][j] = b[i + n/2][j + n/2];
+            }
+        }
+        m_temp = multiply(a_temp, b_temp);
+
+        // M5 should be added to c12 and subtracted from c11
+        for (int i = 0; i < n/2; i++)
+        {
+            for (int j = 0; j < n/2; j++)
+            {
+                c[i][j] -= m_temp[i][j];
+                c[i][j + n/2] += m_temp[i][j];
+            }
+        }
+
+        // M6 = (A21-A11)*(B11+B12)
+        for (int i = 0; i < n/2; i++)
+        {
+            for (int j = 0; j < n/2; j++)
+            {
+                a_temp[i][j] = a[i + n/2][j] - a[i][j];
+                b_temp[i][j] = b[i][j] + b[i][j + n/2];
+            }
+        }
+        m_temp = multiply(a_temp, b_temp);
+
+        // M6 should be added to c22
+        for (int i = 0; i < n/2; i++)
+        {
+            for (int j = 0; j < n/2; j++)
+            {
+                c[i + n/2][j + n/2] += m_temp[i][j];
+            }
+        }
+
+        // M7 = (A12-A22)*(B21+B22)
+        for (int i = 0; i < n/2; i++)
+        {
+            for (int j = 0; j < n/2; j++)
+            {
+                a_temp[i][j] = a[i][j + n/2] - a[i + n/2][j + n/2];
+                b_temp[i][j] = b[i + n/2][j] + b[i + n/2][j + n/2];
+            }
+        }
+        m_temp = multiply(a_temp, b_temp);
+
+        // M7 should be added to C11
+        for (int i = 0; i < n/2; i++)
+        {
+            for (int j = 0; j < n/2; j++)
+            {
+                c[i][j] += m_temp[i][j];
+            }
+        }
+        return c;
 
     }
     public static int[][] multiply(int[][] a, int[][] b)
     {
         int n = a.length;
+        if(n >= n0)
+            return strassen(a, b);
         int[][] c = new int[n][n];
         for (int i = 0; i < n; i++)
         {
