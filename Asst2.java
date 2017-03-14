@@ -29,12 +29,20 @@ public class Asst2
                 b[i][j] = Integer.parseInt(br.readLine());
             }
         }
-
-        // matrix to output
-        int[][] c = new int[n][n];
-        randtests(n);
         br.close();
         fr.close();
+        // matrix to output
+        int[][] c = new int[n][n];
+        c = multiply(a,b);
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                System.out.println(c[i][j]);
+            }
+        }
+        //randtests(n);
+        
     }
 
     public static void randtests(int n)
