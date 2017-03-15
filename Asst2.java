@@ -5,7 +5,7 @@ public class Asst2
 {
     static final int MIN = 0;
     static final int MAX = 2;
-    static final int n0 = 10240;
+    static final int n0 = 1024;
     public static void main(String[] args) throws IOException
     {
         int n = Integer.parseInt(args[1]);
@@ -86,7 +86,7 @@ public class Asst2
     */
     public static int[][] strassen(int[][] a, int[][] b)
     {
-        int n = a.length; // readability
+        int n = ((a.length + 1)/2) * 2; // readability
         /*
         Declaring these 3 temp variables allows us to reduce space, 
         the number of memory allocations the program has to perform, 
@@ -98,15 +98,15 @@ public class Asst2
         int[][] m_temp = new int[n/2][n/2];
 
         // to be returned
-        int[][] c = new int[n][n];
+        int[][] c = new int[a.length][a.length];
 
         //M1 = (A11 + A22)*(B11 + B22)
         for (int i = 0; i < n/2; i++)
         {
             for (int j = 0; j < n/2; j++)
             {
-                a_temp[i][j] = a[i][j] + a[i + n/2][j + n/2];
-                b_temp[i][j] = b[i][j] + b[i + n/2][j + n/2];
+                a_temp[i][j] = elt(a, i, j) + elt(a, i + n/2, j + n/2);
+                b_temp[i][j] = elt(b, i, j) + elt(b, i + n/2, j + n/2);
             }
         }
         m_temp = multiply(a_temp, b_temp); 
@@ -122,8 +122,9 @@ public class Asst2
         {
             for (int j = 0; j < n/2; j++)
             {
-                c[i][j] += m_temp[i][j];//C11
-                c[i + n/2][j + n/2] += m_temp[i][j];//C22
+                c[i][j] += m_temp[i][j]; // C11
+                if (i + n/2 < c.length && j + n/2 < c.length)
+                    c[i + n/2][j + n/2] += m_temp[i][j]; // C22
             }
         }
 
@@ -132,7 +133,7 @@ public class Asst2
         {
             for (int j = 0; j < n/2; j++)
             {
-                a_temp[i][j] = a[i + n/2][j] + a[i + n/2][j + n/2];
+                a_temp[i][j] = elt(a,i + n/2,j) + elt(a,i + n/2,j + n/2);
                 b_temp[i][j] = b[i][j];
             }
         }
@@ -143,8 +144,10 @@ public class Asst2
         {
             for (int j = 0; j < n/2; j++)
             {
-                c[i + n/2][j] += m_temp[i][j];
-                c[i + n/2][j + n/2] -= m_temp[i][j];
+                if (i + n/2 < c.length)
+                    c[i + n/2][j] += m_temp[i][j];
+                if (i + n/2 < c.length && j + n/2 < c.length)
+                    c[i + n/2][j + n/2] -= m_temp[i][j];
             }
         }
 
@@ -154,7 +157,7 @@ public class Asst2
             for (int j = 0; j < n/2; j++)
             {
                 a_temp[i][j] = a[i][j];
-                b_temp[i][j] = b[i][j + n/2] - b[i + n/2][j + n/2];
+                b_temp[i][j] = elt(b,i,j + n/2) - elt(b,i + n/2,j + n/2);
             }
         }
         m_temp = multiply(a_temp, b_temp);
@@ -164,8 +167,10 @@ public class Asst2
         {
             for (int j = 0; j < n/2; j++)
             {
-                c[i][j + n/2] += m_temp[i][j];
-                c[i + n/2][j + n/2] += m_temp[i][j];
+                if (j + n/2 < c.length)
+                    c[i][j + n/2] += m_temp[i][j];
+                if (i + n/2 < c.length && j + n/2 < c.length)
+                    c[i + n/2][j + n/2] += m_temp[i][j];
             }
         }
 
@@ -174,8 +179,8 @@ public class Asst2
         {
             for (int j = 0; j < n/2; j++)
             {
-                a_temp[i][j] = a[i + n/2][j + n/2];
-                b_temp[i][j] = b[i + n/2][j] - b[i][j];
+                a_temp[i][j] = elt(a, i + n/2, j + n/2);
+                b_temp[i][j] = elt(b, i + n/2, j) - b[i][j];
             }
         }
         m_temp = multiply(a_temp, b_temp);
@@ -186,7 +191,8 @@ public class Asst2
             for (int j = 0; j < n/2; j++)
             {
                 c[i][j] += m_temp[i][j];
-                c[i + n/2][j] += m_temp[i][j];
+                if (i + n/2 < c.length)
+                    c[i + n/2][j] += m_temp[i][j];
             }
         }
 
@@ -195,8 +201,8 @@ public class Asst2
         {
             for (int j = 0; j < n/2; j++)
             {
-                a_temp[i][j] = a[i][j] + a[i][j + n/2];
-                b_temp[i][j] = b[i + n/2][j + n/2];
+                a_temp[i][j] = a[i][j] + elt(a, i, j + n/2);
+                b_temp[i][j] = elt(b, i + n/2, j + n/2);
             }
         }
         m_temp = multiply(a_temp, b_temp);
@@ -207,7 +213,8 @@ public class Asst2
             for (int j = 0; j < n/2; j++)
             {
                 c[i][j] -= m_temp[i][j];
-                c[i][j + n/2] += m_temp[i][j];
+                if (j + n/2 < c.length)
+                    c[i][j + n/2] += m_temp[i][j];
             }
         }
 
@@ -216,8 +223,8 @@ public class Asst2
         {
             for (int j = 0; j < n/2; j++)
             {
-                a_temp[i][j] = a[i + n/2][j] - a[i][j];
-                b_temp[i][j] = b[i][j] + b[i][j + n/2];
+                a_temp[i][j] = elt(a, i + n/2, j) - a[i][j];
+                b_temp[i][j] = b[i][j] + elt(b, i, j + n/2);
             }
         }
         m_temp = multiply(a_temp, b_temp);
@@ -227,7 +234,8 @@ public class Asst2
         {
             for (int j = 0; j < n/2; j++)
             {
-                c[i + n/2][j + n/2] += m_temp[i][j];
+                if (i + n/2 < c.length && j + n/2 < c.length)
+                    c[i + n/2][j + n/2] += m_temp[i][j];
             }
         }
 
@@ -236,8 +244,8 @@ public class Asst2
         {
             for (int j = 0; j < n/2; j++)
             {
-                a_temp[i][j] = a[i][j + n/2] - a[i + n/2][j + n/2];
-                b_temp[i][j] = b[i + n/2][j] + b[i + n/2][j + n/2];
+                a_temp[i][j] = elt(a, i, j + n/2) - elt(a, i + n/2, j + n/2);
+                b_temp[i][j] = elt(b, i + n/2, j) + elt(b, i + n/2, j + n/2);
             }
         }
         m_temp = multiply(a_temp, b_temp);
