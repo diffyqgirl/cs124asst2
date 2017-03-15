@@ -253,6 +253,14 @@ public class Asst2
         return c;
 
     }
+
+    public static int elt(int[][] a, int i, int j)
+    {
+        if (i < a.length && j < a.length)
+            return a[i][j];
+        return 0;
+    }
+
     public static int[][] multiply(int[][] a, int[][] b)
     {
         int n = a.length;
