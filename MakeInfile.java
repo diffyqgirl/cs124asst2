@@ -6,7 +6,7 @@ public class MakeInfile
     public static void main(String[] args) throws IOException
     {
         final int MIN = 0;
-        final int MAX = 2;
+        final int MAX = 3;
         int n = Integer.parseInt(args[0]);
         File infile = new File(args[1]);
         FileWriter fw = new FileWriter(infile);

@@ -3,11 +3,12 @@ import java.io.*;
 
 public class Asst2
 {
-    static final int MIN = 0;
-    static final int MAX = 2;
-    static final int n0 = 1024;
+    
+    static int n0 = 128; // default initialization, optional 0 flag alters this. 
     public static void main(String[] args) throws IOException
     {
+        if(Integer.parseInt(args[0])>=1)
+            n0 = Integer.parseInt(args[0]);
         int n = Integer.parseInt(args[1]);
         File infile = new File(args[2]);
         FileReader fr = new FileReader(infile);
@@ -49,6 +50,7 @@ public class Asst2
         
     }
 
+/*
     public static void randtests(int n)
     {
         int[][] a = new int[n][n];
@@ -64,6 +66,7 @@ public class Asst2
         int[][] c = multiply(a,b);
         //print2D(c);
     }
+    */
     public static int[][] add(int[][] a, int[][] b)
     {
         int[][] c = new int[a.length][a.length];
