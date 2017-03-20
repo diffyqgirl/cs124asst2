@@ -1,0 +1,9 @@
+#!/bin/bash
+make
+#./strassen n0 n infile
+echo "naive multiply with n = $2"
+time ./strassen "$(($2 + 1))" "$2" "$3" > outmult2.txt 
+echo "strassen with n0 = $1, n = $2"
+time ./strassen "$1" "$2" "$3" > outstrassen2.txt
+
+diff -u outstrassen2.txt outmult2.txt

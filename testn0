@@ -1,0 +1,14 @@
+#!/bin/bash
+make
+#./strassen n0 n infile
+TRIALS=5
+MIN=64
+MAX=1024
+echo "times are summed over $TRIALS trials"
+echo "naive multiply with n = $2"
+time for j in $(seq 1 $TRIALS); do ./strassen "$(($2 + 1))" "$2" "$3" > /dev/0; done
+
+for ((i = $MIN; i <= $MAX; i *= 2)); do
+    echo "strassen with n0 = $i, n = $2"
+    time for j in $(seq 1 $TRIALS); do ./strassen "$i" "$2" "$3" > /dev/0; done
+done
