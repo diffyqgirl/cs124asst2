@@ -32,6 +32,64 @@ The ordering i, k, j produces the best results. The caching behaviour of that or
 \subsection*{Testing Correctness}
 I used the unused first parameter as input for $n_0$ to determine what the experimental value for the optimal $n-0$ is. The program will default to whatever I determine that value to be if 0 is input for the first parameter (as the problem set description said it would be for grading). I wrote a bash script called check to help me test correctness, that would run the program first on an inputted $n_0 < n$, then on $n_0 > n$, and use the shell diff command to check that their respective outputs are identical. When $n_0 < n$, Strassen's algorithm will be used at least once. When $n_0 > n$, only the traditional matrix multiplication algorithm will be used. Therefore, this process checks my implementation of Strassen's algorithm against the traditional matrix multiplication algorithm. 
 \subsection*{Runtime for Different $n_0$}
-I wrote another bash script called testn0 to experiment efficiently with timing the runtime of different values of $n$ and $n_0$. I was curious if the value of the optimal crossover point might vary with $n$ as well as with $n_0$. It seemed natural to test powers of 2 for $n_0$, and I experimented with several different values of $n$. I averaged over 5 trials to reduce statistical variation. 
+I wrote another bash script called testn0 to experiment efficiently with timing the runtime of different values of $n$ and $n_0$. I was curious if the value of the optimal crossover point might vary with $n$ as well as with $n_0$. It seemed natural to test powers of 2 for $n_0$, and I experimented with several different values of $n$. I averaged over 5 trials to reduce statistical variation. The first entry in the table, with $n_0 > n$, represents using the traditional multiplication algorithm.
+\begin{center}
+\begin{tabular} { |c|c|c| }
+\hline
+$n$ & $n_0$ & runtime \\
+\hline\hline
+1000 & $>1000$ & 0.82s \\
+\hline\hline
+1000 & 64 & 1.38s \\
+\hline
+1000 & 128 & 0.83s \\
+\hline
+1000 & 256 & 0.82s \\
+\hline
+1000 & 512 & 0.67s \\ 
+\hline
+\end{tabular}
+\end{center}
+$ n_0 \approx 512$ looks promising. We experiment with a few more values of $n$. 
+\begin{center}
+\begin{tabular} { |c|c|c| }
+\hline
+$n$ & $n_0$ & runtime \\
+\hline\hline
+2000 & $>2000$ & 4.43s \\
+\hline\hline
+2000 & 64 & 5.36s \\
+\hline
+2000 & 128 & 3.47s \\
+\hline
+2000 & 256 & 2.76s\\
+\hline
+2000 & 512 & 2.77s \\ 
+\hline
+2000 & 1024 & 3.83s\\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular} { |c|c|c| }
+\hline
+$n$ & $n_0$ & runtime \\
+\hline\hline
+1500 & $>1500$ & 2.11s \\
+\hline\hline
+1500 & 64 & 2.72 s \\
+\hline
+1500 & 128 & 2.10ss \\
+\hline
+1500 & 256 & 1.68s\\
+\hline
+1500 & 512 & 1.45s \\ 
+\hline
+1500 & 1024 & 1.78s\\
+\hline
+\end{tabular}
+\end{center}
+
 
 \end{document}
