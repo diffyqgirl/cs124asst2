@@ -90,26 +90,27 @@ public class Asst2
     public static int[][] strassen(int[][] a, int[][] b)
     {
         int n = ((a.length + 1)/2) * 2; // readability
+        int n2 = n/2;
         /*
         Declaring these 3 temp variables allows us to reduce space, 
         the number of memory allocations the program has to perform, 
         and the number of times the program has to copy (n/2)^2 matrix 
         entries. I do think it's a little less readable, however.
         */
-        int[][] a_temp = new int[n/2][n/2];
-        int[][] b_temp = new int[n/2][n/2];
-        int[][] m_temp = new int[n/2][n/2];
+        int[][] a_temp = new int[n2][n2];
+        int[][] b_temp = new int[n2][n2];
+        int[][] m_temp = new int[n2][n2];
 
         // to be returned
         int[][] c = new int[a.length][a.length];
 
         //M1 = (A11 + A22)*(B11 + B22)
-        for (int i = 0; i < n/2; i++)
+        for (int i = 0; i < n2; i++)
         {
-            for (int j = 0; j < n/2; j++)
+            for (int j = 0; j < n2; j++)
             {
-                a_temp[i][j] = elt(a, i, j) + elt(a, i + n/2, j + n/2);
-                b_temp[i][j] = elt(b, i, j) + elt(b, i + n/2, j + n/2);
+                a_temp[i][j] = elt(a, i, j) + elt(a, i + n2, j + n2);
+                b_temp[i][j] = elt(b, i, j) + elt(b, i + n2, j + n2);
             }
         }
         m_temp = multiply(a_temp, b_temp); 
@@ -121,142 +122,142 @@ public class Asst2
             and memory allocation, so we don't. 
         */
         //M1 should be added to C11 and C22
-        for (int i = 0; i < n/2; i++)
+        for (int i = 0; i < n2; i++)
         {
-            for (int j = 0; j < n/2; j++)
+            for (int j = 0; j < n2; j++)
             {
                 c[i][j] += m_temp[i][j]; // C11
-                if (i + n/2 < c.length && j + n/2 < c.length)
-                    c[i + n/2][j + n/2] += m_temp[i][j]; // C22
+                if (i + n2 < c.length && j + n2 < c.length)
+                    c[i + n2][j + n2] += m_temp[i][j]; // C22
             }
         }
 
         // M2 = (A21 + A22)(B11)
-        for (int i = 0; i < n/2; i++)
+        for (int i = 0; i < n2; i++)
         {
-            for (int j = 0; j < n/2; j++)
+            for (int j = 0; j < n2; j++)
             {
-                a_temp[i][j] = elt(a,i + n/2,j) + elt(a,i + n/2,j + n/2);
+                a_temp[i][j] = elt(a,i + n2,j) + elt(a,i + n2,j + n2);
                 b_temp[i][j] = b[i][j];
             }
         }
         m_temp = multiply(a_temp, b_temp);
 
         // M2 should be added to C21 and subtracted from C22
-        for (int i = 0; i < n/2; i++)
+        for (int i = 0; i < n2; i++)
         {
-            for (int j = 0; j < n/2; j++)
+            for (int j = 0; j < n2; j++)
             {
-                if (i + n/2 < c.length)
-                    c[i + n/2][j] += m_temp[i][j];
-                if (i + n/2 < c.length && j + n/2 < c.length)
-                    c[i + n/2][j + n/2] -= m_temp[i][j];
+                if (i + n2 < c.length)
+                    c[i + n2][j] += m_temp[i][j];
+                if (i + n2 < c.length && j + n2 < c.length)
+                    c[i + n2][j + n2] -= m_temp[i][j];
             }
         }
 
         // M3 = A11 * (B12-B22)
-        for (int i = 0; i < n/2; i++)
+        for (int i = 0; i < n2; i++)
         {
-            for (int j = 0; j < n/2; j++)
+            for (int j = 0; j < n2; j++)
             {
                 a_temp[i][j] = a[i][j];
-                b_temp[i][j] = elt(b,i,j + n/2) - elt(b,i + n/2,j + n/2);
+                b_temp[i][j] = elt(b,i,j + n2) - elt(b,i + n2,j + n2);
             }
         }
         m_temp = multiply(a_temp, b_temp);
 
         // M3 should be added to c12 and c22
-        for (int i = 0; i < n/2; i++)
+        for (int i = 0; i < n2; i++)
         {
-            for (int j = 0; j < n/2; j++)
+            for (int j = 0; j < n2; j++)
             {
-                if (j + n/2 < c.length)
-                    c[i][j + n/2] += m_temp[i][j];
-                if (i + n/2 < c.length && j + n/2 < c.length)
-                    c[i + n/2][j + n/2] += m_temp[i][j];
+                if (j + n2 < c.length)
+                    c[i][j + n2] += m_temp[i][j];
+                if (i + n2 < c.length && j + n2 < c.length)
+                    c[i + n2][j + n2] += m_temp[i][j];
             }
         }
 
         // M4 = A22*(B21-B11)
-        for (int i = 0; i < n/2; i++)
+        for (int i = 0; i < n2; i++)
         {
-            for (int j = 0; j < n/2; j++)
+            for (int j = 0; j < n2; j++)
             {
-                a_temp[i][j] = elt(a, i + n/2, j + n/2);
-                b_temp[i][j] = elt(b, i + n/2, j) - b[i][j];
+                a_temp[i][j] = elt(a, i + n2, j + n2);
+                b_temp[i][j] = elt(b, i + n2, j) - b[i][j];
             }
         }
         m_temp = multiply(a_temp, b_temp);
 
         // M4 should be added to c11 and c21
-        for (int i = 0; i < n/2; i++)
+        for (int i = 0; i < n2; i++)
         {
-            for (int j = 0; j < n/2; j++)
+            for (int j = 0; j < n2; j++)
             {
                 c[i][j] += m_temp[i][j];
-                if (i + n/2 < c.length)
-                    c[i + n/2][j] += m_temp[i][j];
+                if (i + n2 < c.length)
+                    c[i + n2][j] += m_temp[i][j];
             }
         }
 
         // M5 = (A11 + A12)*B22
-        for (int i = 0; i < n/2; i++)
+        for (int i = 0; i < n2; i++)
         {
-            for (int j = 0; j < n/2; j++)
+            for (int j = 0; j < n2; j++)
             {
-                a_temp[i][j] = a[i][j] + elt(a, i, j + n/2);
-                b_temp[i][j] = elt(b, i + n/2, j + n/2);
+                a_temp[i][j] = a[i][j] + elt(a, i, j + n2);
+                b_temp[i][j] = elt(b, i + n2, j + n2);
             }
         }
         m_temp = multiply(a_temp, b_temp);
 
         // M5 should be added to c12 and subtracted from c11
-        for (int i = 0; i < n/2; i++)
+        for (int i = 0; i < n2; i++)
         {
-            for (int j = 0; j < n/2; j++)
+            for (int j = 0; j < n2; j++)
             {
                 c[i][j] -= m_temp[i][j];
-                if (j + n/2 < c.length)
-                    c[i][j + n/2] += m_temp[i][j];
+                if (j + n2 < c.length)
+                    c[i][j + n2] += m_temp[i][j];
             }
         }
 
         // M6 = (A21-A11)*(B11+B12)
-        for (int i = 0; i < n/2; i++)
+        for (int i = 0; i < n2; i++)
         {
-            for (int j = 0; j < n/2; j++)
+            for (int j = 0; j < n2; j++)
             {
-                a_temp[i][j] = elt(a, i + n/2, j) - a[i][j];
-                b_temp[i][j] = b[i][j] + elt(b, i, j + n/2);
+                a_temp[i][j] = elt(a, i + n2, j) - a[i][j];
+                b_temp[i][j] = b[i][j] + elt(b, i, j + n2);
             }
         }
         m_temp = multiply(a_temp, b_temp);
 
         // M6 should be added to c22
-        for (int i = 0; i < n/2; i++)
+        for (int i = 0; i < n2; i++)
         {
-            for (int j = 0; j < n/2; j++)
+            for (int j = 0; j < n2; j++)
             {
-                if (i + n/2 < c.length && j + n/2 < c.length)
-                    c[i + n/2][j + n/2] += m_temp[i][j];
+                if (i + n2 < c.length && j + n2 < c.length)
+                    c[i + n2][j + n2] += m_temp[i][j];
             }
         }
 
         // M7 = (A12-A22)*(B21+B22)
-        for (int i = 0; i < n/2; i++)
+        for (int i = 0; i < n2; i++)
         {
-            for (int j = 0; j < n/2; j++)
+            for (int j = 0; j < n2; j++)
             {
-                a_temp[i][j] = elt(a, i, j + n/2) - elt(a, i + n/2, j + n/2);
-                b_temp[i][j] = elt(b, i + n/2, j) + elt(b, i + n/2, j + n/2);
+                a_temp[i][j] = elt(a, i, j + n2) - elt(a, i + n2, j + n2);
+                b_temp[i][j] = elt(b, i + n2, j) + elt(b, i + n2, j + n2);
             }
         }
         m_temp = multiply(a_temp, b_temp);
 
         // M7 should be added to C11
-        for (int i = 0; i < n/2; i++)
+        for (int i = 0; i < n2; i++)
         {
-            for (int j = 0; j < n/2; j++)
+            for (int j = 0; j < n2; j++)
             {
                 c[i][j] += m_temp[i][j];
             }
@@ -277,6 +278,20 @@ public class Asst2
         int n = a.length;
         if(n >= n0)
             return strassen(a, b);
+        /*
+        int[][] c = new int[n][n];
+        for (int i = 0; i < n; i++)
+        {
+            for (int k = 0; k < n; k++)
+            { 
+                for (int j = 0; j < n; j++)
+                {
+                    c[i][j] += a[i][k]*b[k][j];
+                }
+            }
+        }
+        */
+        
         int[][] c = new int[n][n];
         for (int i = 0; i < n; i++)
         {
@@ -289,6 +304,7 @@ public class Asst2
                 }
             }
         }
+        
         return c;
     }
 

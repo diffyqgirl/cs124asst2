@@ -1,7 +1,7 @@
 #!/bin/bash
 make
 #./strassen n0 n infile
-TRIALS=5
+TRIALS=20
 MIN=64
 MAX=1024
 echo "times are summed over $TRIALS trials"
