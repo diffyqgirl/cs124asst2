@@ -4,7 +4,7 @@ import java.io.*;
 public class Asst2
 {
     
-    static int n0 = 128; // default initialization, optional 0 flag alters this. 
+    static int n0 = 512; // default initialization, optional 0 flag alters this. 
     public static void main(String[] args) throws IOException
     {
         if(Integer.parseInt(args[0])>=1)
