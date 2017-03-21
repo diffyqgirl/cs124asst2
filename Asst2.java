@@ -46,27 +46,10 @@ public class Asst2
             output.append(c[i][i]).append("\n");
         }
         System.out.println(output.toString());
-        //randtests(n);
         
     }
 
-/*
-    public static void randtests(int n)
-    {
-        int[][] a = new int[n][n];
-        int[][] b = new int[n][n];
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < n; j++)
-            {
-                a[i][j]= (int)(Math.random()*(MAX-MIN) + MIN);
-                b[i][j]= (int)(Math.random()*(MAX-MIN) + MIN);
-            }
-        }
-        int[][] c = multiply(a,b);
-        //print2D(c);
-    }
-    */
+
     public static int[][] add(int[][] a, int[][] b)
     {
         int[][] c = new int[a.length][a.length];

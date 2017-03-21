@@ -130,7 +130,7 @@ $n$ & $n_0$ & runtime \\
 \end{tabular}
 \end{center}
 
-$n_0 = 512$ seems to be producing the best result, ie to use Strassen's algorithm for $n \geq 512$ and not use Strassen's algorithm for $n < 512$. This is much higher than the values for $n_0$ that my classmates seemed to be getting. I am convinced that the majority of the difference comes not from slowness in my Strassen's algorithm, but from the optimizations I did for my naive multiplication algorithm. Not only did I rearrange the matrix order as suggested, but I also saved some intermediate values (discussed above). Saving intermediate values speeds up the naive multiplication algorithm by an additional factor of 2-3 in my tests, which has the consequence of pushing $n_0$ much higher than it would be if I disabled that. In fact, when I commented out that additional caching optimization, I got values of $n_0$ as low as 64. 
+$n_0 = 512$ seems to be producing the best result, ie to use Strassen's algorithm for $n \geq 512$ and not use Strassen's algorithm for $n < 512$. This is much higher than the values for $n_0$ that my classmates seemed to be getting. I am convinced that the majority of the difference comes not from slowness in my Strassen's algorithm, but from the optimizations I did for my naive multiplication algorithm. Not only did I rearrange the matrix order as suggested, but I also saved some intermediate values (discussed above). Saving intermediate values speeds up the naive multiplication algorithm by an additional factor of 2-3 in my tests, which has the consequence of pushing $n_0$ much higher than it would be if I disabled that. In fact, when I commented out that additional caching optimization, I found that it was optimal to use the Strassen's algorithm for $n=128$, and to start using the conventional algorithm at $n=64$. 
 
 This table gives results for $n_0$ with the correct $i$, $k$, $j$ ordering but without the additional caching optimization on the naive algorithm.
 \begin{center}
@@ -142,7 +142,7 @@ $n$ & $n_0$ & runtime \\
 \hline\hline
 1024 & 32 & 1.8 s \\
 \hline
-1024 & 64  & 1.4 s \\
+1024 & 64  & 1.6 s \\
 \hline
 1024 & 128 & 1.4 s\\
 \hline
@@ -154,8 +154,38 @@ $n$ & $n_0$ & runtime \\
 \hline
 \end{tabular}
 \end{center}
-In this implementation (since $n$ is a power of 2 and the program executes Strassen's algorithm if $n = n_0$), the last time Strassen's algorithm is used should be at either $n=64$ or $n=128$, with the naive algorithm beginning at $n=32$ or $n=64$.
+In this implementation (since $n$ is a power of 2 and the program executes Strassen's algorithm if $n = n_0$), the last time Strassen's algorithm is used should be at either $n=128$, with the naive algorithm beginning at $n=64$.
 
 \section*{Theoretical Results for $n_0$} 
+\subsection*{Recurrence Relation Calculations}
+The conventional algorithm has runtime $T_C (n) = 2 n^3$. This is because the innermost for loop performs 2 operations: the multiplication a[i][k] * b[k][j] and incrementing j to iterate through the innermost for loop. 
+
+To calculate the theoretical runtime $T_S(n)$ of Strassen's algorithm, we break it into steps. 
+
+Recursively calling multiply($A_{temp}$, $B_{temp}$) takes $\min(T_S(\frac{n}{2}), T_C(\frac{n}{2}))$ time. At $n=n_0$, it will be optimal to use the conventional algorithm in our recursion, and so calling multiply will take $T_C(\frac{n_0}{2}) = \frac{1}{4} n_0^3$ time. This operation is performed once for each $M$, for a total of 7 times. 
+
+The other steps performed in Strassen's algorithm are as follows, with the cost of incrementing the counter on the innermost for loop variable included for each nested for loop. Steps that are $o(n^2)$ are omitted. \\\\
+calculate input to M1: $7n^2$\\
+add M1 to C: $7 n^2$\\
+calculate input to M2: $7n^2$\\
+add M2 to C: $7n^2$\\
+calculate input to M3: $5n^2$\\
+add M3 to C: $9 n^2$\\
+calculate input to M4: $5n^2$\\
+add M4 to C: $5n^2$\\
+calculate input to M5: $5n^2$\\
+add M5 to C: $5 n^2$\\
+calculate input to M6: $5 n^2$\\
+add M6 to C: $6 n^2$\\
+calculate input to M7: $9 n^2$\\
+add M7 to C: $2n^2$
+
+In total, $T_S(n) = 84 n^2 + 7 \min(T_S(\frac{n}{2}, T_C(\frac{n}{2}))$. It follows that $T_s(n_0) = 84 n_0^2 + \frac{7}{4} n_0^3$. We find our theoretical value of $n_0$ by setting $T_S(n_0) = T_C (n_0)$, which yields $n_0 = 336$. This is reasonably close to the values we found for $n_0$ experimentally, especially given how much we have found the details of the implementation affects performance via caching. 
+
+\subsection*{Compiler Optimization and Theoretical Runtime}
+In the previous section, we found our theoretical $n_0 = 336$. This is higher than it strictly needs to be, given our methodology for calculating theoretical runtime. 
+
+
+
 
 \end{document}
