@@ -31,11 +31,17 @@ k, j, i & 24.67s\\
 The ordering i, k, j produces the best results. The caching behaviour of that ordering can be further optimized by saving the intermediate value of each $A[i][k]$ before we iterate over $j$. This allows the innermost loop, with iterates over $j$, to only access a single row of matrix $B$, in order, via calls to access $B[k][j]$. Since the matrices are stored in row-major order, this is very cache friendly. Saving the intermediate value of $A[i][k]$ prevents the cache from thrashing as it must repeatedly load up $A[i]$ to recalculate $A[i][k]$, which is wasted work since $A[i][k]$ isn't changing during the innermost loop over $j$. This improves runtime of the naive algorithm by an additional factor of 2-3, which drastically affects my results for $n_0$ (discussed more in the experimental results section).  
 
 \section*{Strassen's Algorithm Implementation}
-Wikipedia defines Strassen's algorithm as follows:\\
+\subsection*{Interaction With the Naive Algorithm}
+Strassen's algorithm is implemented in a method called strassen. However, the main method instead calls the multiply method, which returns strassen(parameters) if $n \geq n_0$. Otherwise, multiply returns the result of executing the naive algorithm. When strassen() recurses, it recursively calls multiply(), which then chooses whether to use strassen() or default to the naive method. strassen() never directly calls strassen(). The reason I chose to do it like this, even though it makes the recursion slightly more complicated, is that it allows the initial caller (ie the main method) to not have to worry about whether strassen's algorithm is being used on the first iteration or not. The main method simply calls multiply. Also, since strassen() must recurse in many places, strassen() would have to repeat the work of making that decision many times. This design would also make it easier if we wanted to add other matrix multiplication algorithms that were optimal under a different set of conditions.  
+\subsection*{Reducing Memory Allocation and Data Copying}
+Wikipedia defines Strassen's algorithm with the following variables:\\
 \includegraphics [scale = 0.4] {strassen} \\
 I will use their variable naming scheme, both in my writeup and in my code. $A_{1,1}$ refers to the top right quadrant of $A$, and so on. 
 
-One way to implement this code would be to define every matrix named in the above description, then carry out every computation explicitely. My algorithm sacrifices that readibility in favor of having to define fewer variables (and therefore allocate more space) and copy data from one matrix to another fewer times. 
+One way to implement this code would be to define every matrix named in the above description, then carry out every computation explicitely. My algorithm sacrifices that readibility in favor of having to define fewer variables (and therefore allocate more space) and copy data from one matrix to another fewer times. I define only 3 intermediate $\frac{n}{2} \times \frac{n}{2}$ matrices, and additionally an $n \times n$ matrix $C$ to store my results. $C$ is ultimately returned. The four submatrices of $C$, and the need to copy their contents into the final $C$, can be entirely eliminated by indexing correctly into $C$ when adding on the various $M$'s.  The other 3 matrices I allocated I called $M_{temp}$, $A_{temp}$, and $B_{temp}$. There is no need to declare 7 matrices to store $M_1 ... M_7$ when one could instead reuse a single matrix $M_{temp}$, calculate its value, add it to the appropriate places in $C$, then reuse it for the next $M$. $A_{temp}$ and $B_{temp}$ contain the appropriate combination of submatrices of $A$ and $B$ that correspond to the $M$ we are currently calculating and saving in $M_{temp}$. It is unneccessary to ever define $A_{1, 1}$, etc. We instead index appropriately into $A$ and $B$ when calculating $A_{temp}$ and $B_{temp}$ respectively. Not defining the 4 submatrices of $A$ and $B$ explicitely saves memory and removes the need to copy all of that data an additional time. 
+
+\subsection*{Other Optimizations}
+I/O is expensive, and was taking more time than the algorithm itself in my initial implementation (which read and wrote characters one at a time). I fixed this by using Java's built-in BufferedReader to read in the input, and by building then printing a single string with many linebreaks (meaning there's only a single call to file output). In java, the most efficient way to build a long string is to use the StringBuilder class, since Java replaces strings instead of modifying them by default because it treats strings as immutable objects. 
 
 
 \section*{Experimental Results for $n_0$}
@@ -145,5 +151,8 @@ $n$ & $n_0$ & runtime \\
 \hline
 \end{tabular}
 \end{center}
+In this implementation (since $n$ is a power of 2 and the program executes Strassen's algorithm if $n = n_0$), the last time Strassen's algorithm is used should be at either $n=64$ or $n=128$, with the naive algorithm beginning at $n=32$ or $n=64$.
+
+\section*{Theoretical Results for $n_0$} 
 
 \end{document}
