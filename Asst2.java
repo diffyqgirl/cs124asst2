@@ -260,21 +260,7 @@ public class Asst2
     {
         int n = a.length;
         if(n >= n0)
-            return strassen(a, b);
-        /*
-        int[][] c = new int[n][n];
-        for (int i = 0; i < n; i++)
-        {
-            for (int k = 0; k < n; k++)
-            { 
-                for (int j = 0; j < n; j++)
-                {
-                    c[i][j] += a[i][k]*b[k][j];
-                }
-            }
-        }
-        */
-        
+            return strassen(a, b);     
         int[][] c = new int[n][n];
         for (int i = 0; i < n; i++)
         {
@@ -289,14 +275,5 @@ public class Asst2
         }
         
         return c;
-    }
-
-    // for testing
-    public static void print2D(int[][] a)
-    {
-        for (int i = 0; i < a.length; i++)
-        {
-            System.out.println(Arrays.toString(a[i]));
-        }
     }
 }
