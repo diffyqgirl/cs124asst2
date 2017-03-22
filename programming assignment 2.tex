@@ -167,8 +167,8 @@ Recursively calling multiply($A_{temp}$, $B_{temp}$) takes $\min(T_S(\frac{n}{2}
 The other steps performed in Strassen's algorithm are as follows, with the cost of incrementing the counter on the innermost for loop variable included for each nested for loop. Steps that are $o(n^2)$ are omitted. \\\\
 calculate input to M1: $7n^2$\\
 add M1 to C: $7 n^2$\\
-calculate input to M2: $7n^2$\\
-add M2 to C: $7n^2$\\
+calculate input to M2: $5n^2$\\
+add M2 to C: $9n^2$\\
 calculate input to M3: $5n^2$\\
 add M3 to C: $9 n^2$\\
 calculate input to M4: $5n^2$\\
@@ -180,10 +180,33 @@ add M6 to C: $6 n^2$\\
 calculate input to M7: $9 n^2$\\
 add M7 to C: $2n^2$
 
-In total, $T_S(n) = 84 n^2 + 7 \min(T_S(\frac{n}{2}, T_C(\frac{n}{2}))$. It follows that $T_s(n_0) = 84 n_0^2 + \frac{7}{4} n_0^3$. We find our theoretical value of $n_0$ by setting $T_S(n_0) = T_C (n_0)$, which yields $n_0 = 336$. This is reasonably close to the values we found for $n_0$ experimentally, especially given how much we have found the details of the implementation affects performance via caching. 
+In total, $T_S(n) = 84 n^2 + 7 \min(T_S(\frac{n}{2}, T_C(\frac{n}{2}))$. It follows that $T_s(n_0) = 82 n_0^2 + \frac{7}{4} n_0^3$. We find our theoretical value of $n_0$ by setting $T_S(n_0) = T_C (n_0)$, which yields $n_0 = 336$. This is reasonably close to the values we found for $n_0$ experimentally, especially given how much we have found the details of the implementation affects performance via caching. 
 
 \subsection*{Compiler Optimization and Theoretical Runtime}
-In the previous section, we found our theoretical $n_0 = 336$. This is higher than it strictly needs to be, given our methodology for calculating theoretical runtime. 
+In the previous section, we found our theoretical $n_0 = 336$. This is higher than it strictly needs to be, given our methodology for calculating theoretical runtime. For example, there are several places with lines of code inside 2 nested for loops similar to
+
+\begin{verbatim}
+a_temp[i][j] = elt(a, i, j + n2) - elt(a, i + n2, j + n2);
+b_temp[i][j] = elt(b, i + n2, j) + elt(b, i + n2, j + n2);
+\end{verbatim}
+
+My analysis counted each computation of i + n2 and j + n2 as a separate operation, with each contributing an addition 1 unit of time cost. This prompted me to experiment with whether recomputing i + n2 and j + n2 actually slows down my algorithm by any noticeable constant factor. It doesn't. I suspect this is because of compiler optimization and how it interacts with assembly. I remember from CS61 examples of assembly saving the result of a simple computation in a register then retrieving that value from the register multiple times instead of redoing the computation multiple times. This is good, because I think the code is a lot more readable with i + n2 and j + n2 written out each time instead of saving those computations in an intermediate variable each time.  I also remember that even very simple programs produced cryptic assembly code, so I did not attempt to verify this explicitely by actually examining the assembly. Reperforming the analysis in the previous section but assuming that i + n2 and j + n2 are not recomputed within a single iteration of the innermost for loop (or, if you prefer, rewriting the code to explicitly store the values of i + n2 and j + n2 then computing the theoretical analysis), gives:\\\\
+calculate input to M1: $7n^2$\\
+add M1 to C: $7 n^2$\\
+calculate input to M2: $5n^2$\\
+add M2 to C: $9n^2$\\
+calculate input to M3: $5n^2$\\
+add M3 to C: $9 n^2$\\
+calculate input to M4: $5n^2$\\
+add M4 to C: $5n^2$\\
+calculate input to M5: $5n^2$\\
+add M5 to C: $5 n^2$\\
+calculate input to M6: $5 n^2$\\
+add M6 to C: $6 n^2$\\
+calculate input to M7: $9 n^2$\\
+add M7 to C: $2n^2$
+
+
 
 
 
