@@ -180,7 +180,7 @@ add M6 to C: $6 n^2$\\
 calculate input to M7: $9 n^2$\\
 add M7 to C: $2n^2$
 
-In total, $T_S(n) = 84 n^2 + 7 \min(T_S(\frac{n}{2}, T_C(\frac{n}{2}))$. It follows that $T_s(n_0) = 82 n_0^2 + \frac{7}{4} n_0^3$. We find our theoretical value of $n_0$ by setting $T_S(n_0) = T_C (n_0)$, which yields $n_0 = 336$. This is reasonably close to the values we found for $n_0$ experimentally, especially given how much we have found the details of the implementation affects performance via caching. 
+In total, $T_S(n) = 84 n^2 + 7 \min(T_S(\frac{n}{2}), T_C(\frac{n}{2}))$. It follows that $T_S(n_0) = 84 n_0^2 + \frac{7}{4} n_0^3$. We find our theoretical value of $n_0$ by setting $T_S(n_0) = T_C (n_0)$, which yields $n_0 = 336$. This is reasonably close to the values we found for $n_0$ experimentally, especially given how much we have found the details of the implementation affects performance via caching. 
 
 \subsection*{Compiler Optimization and Theoretical Runtime}
 In the previous section, we found our theoretical $n_0 = 336$. This is higher than it strictly needs to be, given our methodology for calculating theoretical runtime. For example, there are several places with lines of code inside 2 nested for loops similar to
@@ -205,6 +205,8 @@ calculate input to M6: $5 n^2$\\
 add M6 to C: $6 n^2$\\
 calculate input to M7: $9 n^2$\\
 add M7 to C: $2n^2$
+
+This analysis gives $T_{S'}(n) = 60 n^2 + 7 \min(T_S'(\frac{n}{2}), T_C(\frac{n}{2}))$. It follows that $T_{S'} (n_0) = 60 n_0^2 + \frac{7}{4} n_0^3$. Setting this equal to $T_C(n_0) = 2 n_0^3$ and solving for $n_0$ as before gives $n_0 = 240$. 
 
 
 
